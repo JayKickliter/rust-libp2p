@@ -18,6 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
+#![allow(clippy::type_complexity)]
+
 use crate::transport::{Transport, TransportError, ListenerEvent};
 use crate::Multiaddr;
 use futures::{prelude::*, task::Context, task::Poll};

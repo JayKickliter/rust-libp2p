@@ -66,7 +66,6 @@ macro_rules! codegen {
 /// # use libp2p_core::{identity, Multiaddr, PeerId};
 /// # use libp2p_mdns::service::{MdnsPacket, build_query_response, build_service_discovery_response};
 /// # use std::{io, time::Duration, task::Poll};
-/// # fn main() {
 /// # let my_peer_id = PeerId::from(identity::Keypair::generate_ed25519().public());
 /// # let my_listened_addrs: Vec<Multiaddr> = vec![];
 /// # async {
@@ -105,7 +104,6 @@ macro_rules! codegen {
 ///         }
 ///     }
 /// };
-/// # };
 /// # }
 #[cfg_attr(docsrs, doc(cfg(feature = $feature_name)))]
 pub struct $service_name {
@@ -156,9 +154,11 @@ impl $service_name {
             builder.bind(("0.0.0.0", 5353))?
         };
 
+        #[allow(clippy::redundant_closure_call)]
         let socket = $udp_socket_from_std(std_socket)?;
         // Given that we pass an IP address to bind, which does not need to be resolved, we can
         // use std::net::UdpSocket::bind, instead of its async counterpart from async-std.
+        #[allow(clippy::redundant_closure_call)]
         let query_socket = $udp_socket_from_std(
             std::net::UdpSocket::bind((Ipv4Addr::from([0u8, 0, 0, 0]), 0u16))?,
         )?;
@@ -266,7 +266,7 @@ impl $service_name {
                 },
                 Right(_) => {
                     // Ensure underlying task is woken up on the next interval tick.
-                    while let Some(_) = self.query_interval.next().now_or_never() {};
+                    while self.query_interval.next().now_or_never().is_some() {};
 
                     if !self.silent {
                         let query = dns::build_query();
@@ -321,7 +321,7 @@ impl MdnsPacket {
                             from,
                             query_id: packet.header.id,
                         });
-                        return Some(query);
+                        Some(query)
                     } else if packet
                         .questions
                         .iter()
@@ -334,20 +334,20 @@ impl MdnsPacket {
                                 query_id: packet.header.id,
                             },
                         );
-                        return Some(discovery);
+                        Some(discovery)
                     } else {
-                        return None;
+                        None
                     }
                 } else {
                     let resp = MdnsPacket::Response(MdnsResponse::new (
                         packet,
                         from,
                     ));
-                    return Some(resp);
+                    Some(resp)
                 }
             }
             Err(_) => {
-                return None;
+                None
             }
         }
     }
@@ -543,7 +543,7 @@ impl MdnsPeer {
 
         MdnsPeer {
             addrs,
-            peer_id: my_peer_id.clone(),
+            peer_id: my_peer_id,
             ttl,
         }
     }

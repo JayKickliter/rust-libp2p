@@ -64,6 +64,7 @@ pub trait ConnectionHandler {
     /// Polls the handler for events.
     ///
     /// Returning an error will close the connection to the remote.
+    #[allow(clippy::type_complexity)]
     fn poll(&mut self, cx: &mut Context<'_>)
         -> Poll<Result<ConnectionHandlerEvent<Self::OutboundOpenInfo, Self::OutEvent>, Self::Error>>;
 }

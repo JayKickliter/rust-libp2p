@@ -33,7 +33,6 @@ use libp2p_swarm::{
     NotifyHandler,
     DialPeerCondition,
 };
-use rand;
 use smallvec::SmallVec;
 use std::{collections::VecDeque, iter};
 use std::collections::hash_map::{DefaultHasher, HashMap};

@@ -92,6 +92,7 @@ pub enum IdentityExchange {
 
 /// A future performing a Noise handshake pattern.
 pub struct Handshake<T, C>(
+    #[allow(clippy::type_complexity)]
     Pin<Box<dyn Future<
         Output = Result<(RemoteIdentity<C>, NoiseOutput<T>), NoiseError>,
     > + Send>>

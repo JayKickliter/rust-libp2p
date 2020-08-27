@@ -104,6 +104,7 @@ where
         self.inner.connection_keep_alive()
     }
 
+    #[allow(clippy::type_complexity)]
     fn poll(
         &mut self,
         cx: &mut Context<'_>,

@@ -349,6 +349,7 @@ where
     AStream: TryStream<Ok = ListenerEvent<AInner, AError>, Error = AError>,
     BStream: TryStream<Ok = ListenerEvent<BInner, BError>, Error = BError>,
 {
+    #[allow(clippy::type_complexity)]
     type Item = Result<ListenerEvent<EitherFuture<AInner, BInner>, EitherError<AError, BError>>, EitherError<AError, BError>>;
 
     fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {

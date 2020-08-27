@@ -95,6 +95,7 @@ where
     /// The underlying handler.
     handler: TProtoHandler,
     /// Futures that upgrade incoming substreams.
+    #[allow(clippy::type_complexity)]
     negotiating_in: Vec<(
         TProtoHandler::InboundOpenInfo,
         InboundUpgradeApply<Substream<StreamMuxerBox>, SendWrapper<TProtoHandler::InboundProtocol>>,
@@ -102,6 +103,7 @@ where
     )>,
     /// Futures that upgrade outgoing substreams. The first element of the tuple is the userdata
     /// to pass back once successfully opened.
+    #[allow(clippy::type_complexity)]
     negotiating_out: Vec<(
         TProtoHandler::OutboundOpenInfo,
         OutboundUpgradeApply<Substream<StreamMuxerBox>, SendWrapper<TProtoHandler::OutboundProtocol>>,
@@ -109,6 +111,7 @@ where
     )>,
     /// For each outbound substream request, how to upgrade it. The first element of the tuple
     /// is the unique identifier (see `unique_dial_upgrade_id`).
+    #[allow(clippy::type_complexity)]
     queued_dial_upgrades: Vec<(u64, (upgrade::Version, SendWrapper<TProtoHandler::OutboundProtocol>))>,
     /// Unique identifier assigned to each queued dial upgrade.
     unique_dial_upgrade_id: u64,

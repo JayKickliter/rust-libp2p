@@ -22,9 +22,7 @@
 //! `dns_parser` library.
 
 use crate::{META_QUERY_SERVICE, SERVICE_NAME};
-use data_encoding;
 use libp2p_core::{Multiaddr, PeerId};
-use rand;
 use std::{borrow::Cow, cmp, error, fmt, str, time::Duration};
 
 /// Maximum size of a DNS label as per RFC1035

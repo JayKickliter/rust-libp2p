@@ -34,7 +34,7 @@ use prost::Message as ProtobufMessage;
 use std::{borrow::Cow, fmt, io, iter, pin::Pin};
 use unsigned_varint::codec;
 
-pub const SIGNING_PREFIX: &'static [u8] = b"libp2p-pubsub:";
+pub const SIGNING_PREFIX: &[u8] = b"libp2p-pubsub:";
 
 /// Implementation of the `ConnectionUpgrade` for the Gossipsub protocol.
 #[derive(Clone)]
@@ -78,6 +78,7 @@ where
 {
     type Output = Framed<TSocket, GossipsubCodec>;
     type Error = io::Error;
+    #[allow(clippy::type_complexity)]
     type Future = Pin<Box<dyn Future<Output = Result<Self::Output, Self::Error>> + Send>>;
 
     fn upgrade_inbound(self, socket: TSocket, _: Self::Info) -> Self::Future {
@@ -96,6 +97,7 @@ where
 {
     type Output = Framed<TSocket, GossipsubCodec>;
     type Error = io::Error;
+    #[allow(clippy::type_complexity)]
     type Future = Pin<Box<dyn Future<Output = Result<Self::Output, Self::Error>> + Send>>;
 
     fn upgrade_outbound(self, socket: TSocket, _: Self::Info) -> Self::Future {

@@ -92,6 +92,7 @@ where
     id: TaskId,
 
     /// Sender to emit events to the manager of this task.
+    #[allow(clippy::type_complexity)]
     events: mpsc::Sender<Event<O, H, E, <H::Handler as ConnectionHandler>::Error, C>>,
 
     /// Receiver for commands sent by the manager of this task.
@@ -108,6 +109,7 @@ where
     H::Handler: ConnectionHandler<Substream = Substream<M>>
 {
     /// Create a new task to connect and handle some node.
+    #[allow(clippy::type_complexity)]
     pub fn pending(
         id: TaskId,
         events: mpsc::Sender<Event<O, H, E, <H::Handler as ConnectionHandler>::Error, C>>,
@@ -127,6 +129,7 @@ where
     }
 
     /// Create a task for an existing node we are already connected to.
+    #[allow(clippy::type_complexity)]
     pub fn established(
         id: TaskId,
         events: mpsc::Sender<Event<O, H, E, <H::Handler as ConnectionHandler>::Error, C>>,
@@ -143,6 +146,7 @@ where
 }
 
 /// The state associated with the `Task` of a connection.
+#[allow(clippy::type_complexity)]
 enum State<F, M, H, O, E, C>
 where
     M: StreamMuxer,

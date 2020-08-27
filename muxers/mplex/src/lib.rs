@@ -224,7 +224,7 @@ impl Notifier {
 
 impl ArcWake for Notifier {
     fn wake_by_ref(arc_self: &Arc<Self>) {
-        let wakers = mem::replace(&mut *arc_self.to_wake.lock(), Default::default());
+        let wakers = mem::take(&mut *arc_self.to_wake.lock());
         for waker in wakers {
             waker.wake();
         }

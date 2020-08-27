@@ -38,7 +38,6 @@ use libp2p_swarm::{
 use log::{debug, error, info, trace, warn};
 use lru_time_cache::LruCache;
 use prost::Message;
-use rand;
 use rand::{seq::SliceRandom, thread_rng};
 use std::{
     collections::HashSet,
@@ -228,7 +227,7 @@ impl Gossipsub {
 
     /// Lists peers for a certain topic hash.
     pub fn peers(&self, topic_hash: &TopicHash) -> impl Iterator<Item = &PeerId> {
-        self.mesh.get(topic_hash).into_iter().map(|x| x.into_iter()).flatten()
+        self.mesh.get(topic_hash).into_iter().map(|x| x.iter()).flatten()
     }
 
     /// Lists all peers for any topic.
@@ -746,23 +745,21 @@ impl Gossipsub {
 
                     // if the mesh needs peers add the peer to the mesh
                     if let Some(peers) = self.mesh.get_mut(&subscription.topic_hash) {
-                        if peers.len() < self.config.mesh_n_low {
-                            if peers.insert(propagation_source.clone()) {
-                                debug!(
-                                    "SUBSCRIPTION: Adding peer {} to the mesh for topic {:?}",
-                                    propagation_source.to_string(),
-                                    subscription.topic_hash
-                                );
-                                // send graft to the peer
-                                debug!(
-                                    "Sending GRAFT to peer {} for topic {:?}",
-                                    propagation_source.to_string(),
-                                    subscription.topic_hash
-                                );
-                                grafts.push(GossipsubControlAction::Graft {
-                                    topic_hash: subscription.topic_hash.clone(),
-                                });
-                            }
+                        if peers.len() < self.config.mesh_n_low && peers.insert(propagation_source.clone()) {
+                            debug!(
+                                "SUBSCRIPTION: Adding peer {} to the mesh for topic {:?}",
+                                propagation_source.to_string(),
+                                subscription.topic_hash
+                            );
+                            // send graft to the peer
+                            debug!(
+                                "Sending GRAFT to peer {} for topic {:?}",
+                                propagation_source.to_string(),
+                                subscription.topic_hash
+                            );
+                            grafts.push(GossipsubControlAction::Graft {
+                                topic_hash: subscription.topic_hash.clone(),
+                            });
                         }
                     }
                     // generates a subscription event to be polled
@@ -1068,7 +1065,7 @@ impl Gossipsub {
         if !recipient_peers.is_empty() {
             let event = Arc::new(GossipsubRpc {
                 subscriptions: Vec::new(),
-                messages: vec![message.clone()],
+                messages: vec![message],
                 control_msgs: Vec::new(),
             });
 
@@ -1209,7 +1206,7 @@ impl Gossipsub {
         control: GossipsubControlAction,
     ) {
         control_pool
-            .entry(peer.clone())
+            .entry(peer)
             .or_insert_with(Vec::new)
             .push(control);
     }

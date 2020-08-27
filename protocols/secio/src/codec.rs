@@ -41,6 +41,7 @@ pub type FullCodec<S> = DecoderMiddleware<EncoderMiddleware<LenPrefixCodec<S>>>;
 pub type StreamCipher = Box<dyn stream_cipher::StreamCipher + Send>;
 
 #[derive(Debug, Clone)]
+#[allow(clippy::large_enum_variant)]
 pub enum Hmac {
     Sha256(hmac::Hmac<Sha256>),
     Sha512(hmac::Hmac<Sha512>),

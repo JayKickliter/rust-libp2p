@@ -77,6 +77,7 @@ where
     /// Outbound upgrades waiting to be emitted as an `OutboundSubstreamRequest`.
     outbound: VecDeque<RequestProtocol<TCodec>>,
     /// Inbound upgrades waiting for the incoming request.
+    #[allow(clippy::type_complexity)]
     inbound: FuturesUnordered<BoxFuture<'static,
         Result<
             (TCodec::Request, oneshot::Sender<TCodec::Response>),
@@ -260,6 +261,7 @@ where
         self.keep_alive
     }
 
+    #[allow(clippy::type_complexity)]
     fn poll(
         &mut self,
         cx: &mut Context<'_>,

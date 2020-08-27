@@ -95,6 +95,7 @@ impl MemoryStore {
     }
 }
 
+#[allow(clippy::type_complexity)]
 impl<'a> RecordStore<'a> for MemoryStore {
     type RecordsIter = iter::Map<
         hash_map::Values<'a, Key, Record>,
@@ -205,7 +206,7 @@ impl<'a> RecordStore<'a> for MemoryStore {
                 let p = providers.remove(i);
                 self.provided.remove(&p);
             }
-            if providers.len() == 0 {
+            if providers.is_empty() {
                 e.remove();
             }
         }

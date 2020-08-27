@@ -445,12 +445,12 @@ fn check_for_interface_changes<T>(
     pending: &mut Buffer<T>
 ) -> Result<(), io::Error> {
     // Check for exact match:
-    if listen_addrs.iter().find(|(ip, ..)| ip == &socket_addr.ip()).is_some() {
+    if listen_addrs.iter().any(|(ip, ..)| ip == &socket_addr.ip()) {
         return Ok(())
     }
 
     // No exact match => check netmask
-    if listen_addrs.iter().find(|(_, net, _)| net.contains(&socket_addr.ip())).is_some() {
+    if listen_addrs.iter().any(|(_, net, _)| net.contains(&socket_addr.ip())) {
         return Ok(())
     }
 

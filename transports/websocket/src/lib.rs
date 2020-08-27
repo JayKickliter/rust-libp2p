@@ -103,7 +103,9 @@ where
     type Output = RwStreamSink<BytesConnection<T::Output>>;
     type Error = Error<T::Error>;
     type Listener = MapStream<InnerStream<T::Output, T::Error>, WrapperFn<T::Output>>;
+    #[allow(clippy::type_complexity)]
     type ListenerUpgrade = MapFuture<InnerFuture<T::Output, T::Error>, WrapperFn<T::Output>>;
+    #[allow(clippy::type_complexity)]
     type Dial = MapFuture<InnerFuture<T::Output, T::Error>, WrapperFn<T::Output>>;
 
     fn listen_on(self, addr: Multiaddr) -> Result<Self::Listener, TransportError<Self::Error>> {

@@ -258,7 +258,7 @@ impl Message {
             remaining = &rem[len ..]
         }
 
-        return Ok(Message::Protocols(protocols));
+        Ok(Message::Protocols(protocols))
     }
 }
 
@@ -346,7 +346,7 @@ where
             Poll::Pending => Poll::Pending,
             Poll::Ready(None) => Poll::Ready(None),
             Poll::Ready(Some(Ok(m))) => Poll::Ready(Some(Ok(m))),
-            Poll::Ready(Some(Err(err))) => Poll::Ready(Some(Err(From::from(err)))),
+            Poll::Ready(Some(Err(err))) => Poll::Ready(Some(Err(err))),
         }
     }
 }
@@ -459,7 +459,7 @@ impl Into<io::Error> for ProtocolError {
         if let ProtocolError::IoError(e) = self {
             return e
         }
-        return io::ErrorKind::InvalidData.into()
+        io::ErrorKind::InvalidData.into()
     }
 }
 

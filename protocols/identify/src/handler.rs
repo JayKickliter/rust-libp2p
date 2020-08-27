@@ -86,6 +86,12 @@ impl IdentifyHandler {
     }
 }
 
+impl Default for IdentifyHandler {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ProtocolsHandler for IdentifyHandler {
     type InEvent = ();
     type OutEvent = IdentifyHandlerEvent;
@@ -134,6 +140,7 @@ impl ProtocolsHandler for IdentifyHandler {
         self.keep_alive
     }
 
+    #[allow(clippy::type_complexity)]
     fn poll(&mut self, cx: &mut Context<'_>) -> Poll<
         ProtocolsHandlerEvent<
             Self::OutboundProtocol,

@@ -18,6 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
+#![allow(clippy::type_complexity)]
+
 mod event;
 pub mod peer;
 
@@ -387,14 +389,11 @@ where
         let event = match self.pool.poll(cx) {
             Poll::Pending => return Poll::Pending,
             Poll::Ready(PoolEvent::ConnectionEstablished { connection, num_established }) => {
-                match self.dialing.entry(connection.peer_id().clone()) {
-                    hash_map::Entry::Occupied(mut e) => {
-                        e.get_mut().retain(|s| s.current.0 != connection.id());
-                        if e.get().is_empty() {
-                            e.remove();
-                        }
-                    },
-                    _ => {}
+                if let hash_map::Entry::Occupied(mut e) = self.dialing.entry(connection.peer_id().clone()) {
+                    e.get_mut().retain(|s| s.current.0 != connection.id());
+                    if e.get().is_empty() {
+                        e.remove();
+                    }
                 }
 
                 NetworkEvent::ConnectionEstablished {
@@ -645,8 +644,8 @@ impl NetworkConfig {
         self
     }
 
-    pub fn executor(&self) -> Option<&Box<dyn Executor + Send>> {
-        self.manager_config.executor.as_ref()
+    pub fn executor(&self) -> Option<&(dyn Executor + Send)> {
+        self.manager_config.executor.as_deref()
     }
 
     /// Sets the maximum number of events sent to a connection's background task

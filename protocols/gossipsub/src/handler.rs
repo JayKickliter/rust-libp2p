@@ -166,6 +166,7 @@ impl ProtocolsHandler for GossipsubHandler {
         self.keep_alive
     }
 
+    #[allow(clippy::type_complexity)]
     fn poll(
         &mut self,
         cx: &mut Context<'_>,

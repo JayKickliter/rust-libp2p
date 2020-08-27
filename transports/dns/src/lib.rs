@@ -33,6 +33,8 @@
 //! will be replaced with `/ip4/` and/or `/ip6/` components.
 //!
 
+#![allow(clippy::type_complexity)]
+
 use futures::{prelude::*, channel::oneshot, future::BoxFuture};
 use libp2p_core::{
     Transport,

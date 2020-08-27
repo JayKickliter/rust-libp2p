@@ -43,13 +43,11 @@
 //! use libp2p_tcp::TcpConfig;
 //! use libp2p_noise::{Keypair, X25519Spec, NoiseConfig};
 //!
-//! # fn main() {
 //! let id_keys = identity::Keypair::generate_ed25519();
 //! let dh_keys = Keypair::<X25519Spec>::new().into_authentic(&id_keys).unwrap();
 //! let noise = NoiseConfig::xx(dh_keys).into_authenticated();
 //! let builder = TcpConfig::new().upgrade(upgrade::Version::V1).authenticate(noise);
 //! // let transport = builder.multiplex(...);
-//! # }
 //! ```
 //!
 //! [noise]: http://noiseprotocol.org/
@@ -349,6 +347,7 @@ where
 {
     type Output = (PeerId, NoiseOutput<T>);
     type Error = NoiseError;
+    #[allow(clippy::type_complexity)]
     type Future = Pin<Box<dyn Future<Output = Result<Self::Output, Self::Error>> + Send>>;
 
     fn upgrade_inbound(self, socket: T, info: Self::Info) -> Self::Future {
@@ -372,6 +371,7 @@ where
 {
     type Output = (PeerId, NoiseOutput<T>);
     type Error = NoiseError;
+    #[allow(clippy::type_complexity)]
     type Future = Pin<Box<dyn Future<Output = Result<Self::Output, Self::Error>> + Send>>;
 
     fn upgrade_outbound(self, socket: T, info: Self::Info) -> Self::Future {

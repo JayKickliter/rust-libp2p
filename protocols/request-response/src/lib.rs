@@ -264,6 +264,7 @@ where
     /// The protocol codec for reading and writing requests and responses.
     codec: TCodec,
     /// Pending events to return from `poll`.
+    #[allow(clippy::type_complexity)]
     pending_events: VecDeque<
         NetworkBehaviourAction<
             RequestProtocol<TCodec>,
@@ -587,6 +588,7 @@ where
         }
     }
 
+    #[allow(clippy::type_complexity)]
     fn poll(&mut self, _: &mut Context<'_>, _: &mut impl PollParameters)
         -> Poll<NetworkBehaviourAction<
             RequestProtocol<TCodec>,

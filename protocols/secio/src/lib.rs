@@ -28,7 +28,6 @@
 //! See [`authenticate`](libp2p_core::transport::upgrade::Builder::authenticate).
 //!
 //! ```no_run
-//! # fn main() {
 //! use futures::prelude::*;
 //! use libp2p_secio::{SecioConfig, SecioOutput};
 //! use libp2p_core::{PeerId, Multiaddr, identity, upgrade};
@@ -51,7 +50,6 @@
 //!
 //! // let network = Network::new(transport, local_keys.public().into_peer_id());
 //! // let swarm = Swarm::new(transport, behaviour, local_keys.public().into_peer_id());
-//! # }
 //! ```
 //!
 
@@ -160,6 +158,7 @@ where
     S: AsyncRead + AsyncWrite + Unpin + Send + 'static
 {
     /// The encrypted stream.
+    #[allow(clippy::type_complexity)]
     pub stream: RwStreamSink<StreamMapErr<SecioMiddleware<S>, fn(SecioError) -> io::Error>>,
     /// The public key of the remote.
     pub remote_key: PublicKey,
@@ -182,6 +181,7 @@ where
 {
     type Output = (PeerId, SecioOutput<T>);
     type Error = SecioError;
+    #[allow(clippy::type_complexity)]
     type Future = Pin<Box<dyn Future<Output = Result<Self::Output, Self::Error>> + Send>>;
 
     fn upgrade_inbound(self, socket: T, _: Self::Info) -> Self::Future {
@@ -195,6 +195,7 @@ where
 {
     type Output = (PeerId, SecioOutput<T>);
     type Error = SecioError;
+    #[allow(clippy::type_complexity)]
     type Future = Pin<Box<dyn Future<Output = Result<Self::Output, Self::Error>> + Send>>;
 
     fn upgrade_outbound(self, socket: T, _: Self::Info) -> Self::Future {

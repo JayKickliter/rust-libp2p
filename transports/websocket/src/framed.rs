@@ -108,6 +108,7 @@ where
 {
     type Output = Connection<T::Output>;
     type Error = Error<T::Error>;
+    #[allow(clippy::type_complexity)]
     type Listener = BoxStream<'static, Result<ListenerEvent<Self::ListenerUpgrade, Self::Error>, Self::Error>>;
     type ListenerUpgrade = BoxFuture<'static, Result<Self::Output, Self::Error>>;
     type Dial = BoxFuture<'static, Result<Self::Output, Self::Error>>;

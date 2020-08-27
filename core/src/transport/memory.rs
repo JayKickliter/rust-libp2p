@@ -18,6 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
+#![allow(clippy::type_complexity)]
+
 use crate::{Transport, transport::{TransportError, ListenerEvent}};
 use fnv::FnvHashMap;
 use futures::{future::{self, Ready}, prelude::*, channel::mpsc, task::Context, task::Poll};

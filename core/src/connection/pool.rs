@@ -476,15 +476,12 @@ where
             // Count upwards because we push to / pop from the end. See also `Pool::poll`.
             let mut num_established = 0;
             for &id in conns.keys() {
-                match self.manager.entry(id) {
-                    Some(manager::Entry::Established(e)) => {
-                        let connected = e.remove();
-                        self.disconnected.push(Disconnected {
-                            id, connected, num_established
-                        });
-                        num_established += 1;
-                    },
-                    _ => {}
+                if let Some(manager::Entry::Established(e)) = self.manager.entry(id) {
+                    let connected = e.remove();
+                    self.disconnected.push(Disconnected {
+                        id, connected, num_established
+                    });
+                    num_established += 1;
                 }
             }
         }
@@ -493,12 +490,9 @@ where
         let mut aborted = Vec::new();
         for (&id, (_endpoint, peer2)) in &self.pending {
             if Some(peer) == peer2.as_ref() {
-                match self.manager.entry(id) {
-                    Some(manager::Entry::Pending(e)) => {
-                        e.abort();
-                        aborted.push(id);
-                    },
-                    _ => {}
+                if let Some(manager::Entry::Pending(e)) = self.manager.entry(id) {
+                    e.abort();
+                    aborted.push(id);
                 }
             }
         }
@@ -615,8 +609,8 @@ where
         // are inserted in ascending order of the remaining `num_established`
         // connections. Thus we `pop()` them off from the end to emit the
         // events in an order that properly counts down `num_established`.
-        // See also `Pool::disconnect`.
         while let Some(Disconnected {
+            // TODO: error: this loop never actually loops
             id, connected, num_established
         }) = self.disconnected.pop() {
             return Poll::Ready(PoolEvent::ConnectionClosed {
@@ -876,7 +870,8 @@ where
     I: Iterator<Item = ConnectionId>
 {
     /// Obtains the next connection, if any.
-    pub fn next<'b>(&'b mut self) -> Option<EstablishedConnection<'b, TInEvent, TConnInfo>>
+    #[allow(clippy::should_implement_trait)]
+    pub fn next(&mut self) -> Option<EstablishedConnection<TInEvent, TConnInfo>>
     {
         while let Some(id) = self.ids.next() {
             if self.pool.manager.is_established(&id) { // (*)

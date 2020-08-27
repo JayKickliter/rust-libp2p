@@ -120,6 +120,12 @@ impl PingConfig {
     }
 }
 
+impl Default for PingConfig {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// The result of an inbound or outbound ping.
 pub type PingResult = Result<PingSuccess, PingFailure>;
 

@@ -27,6 +27,7 @@ use std::io::Error as IoError;
 
 /// Error at the SECIO layer communication.
 #[derive(Debug)]
+#[non_exhaustive]
 pub enum SecioError {
     /// I/O error.
     IoError(IoError),
@@ -69,9 +70,6 @@ pub enum SecioError {
 
     /// We received an invalid proposition from remote.
     InvalidProposition(&'static str),
-
-    #[doc(hidden)]
-    __Nonexhaustive
 }
 
 impl error::Error for SecioError {
@@ -119,8 +117,6 @@ impl fmt::Display for SecioError {
                 f.write_str("The hashes of the message didn't match"),
             SecioError::InvalidProposition(msg) =>
                 write!(f, "invalid proposition: {}", msg),
-            SecioError::__Nonexhaustive =>
-                f.write_str("__Nonexhaustive")
         }
     }
 }

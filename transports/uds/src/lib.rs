@@ -49,7 +49,7 @@ macro_rules! codegen {
 
 /// Represents the configuration for a Unix domain sockets transport capability for libp2p.
 #[cfg_attr(docsrs, doc(cfg(feature = $feature_name)))]
-#[derive(Debug, Clone)]
+#[derive(Default, Debug, Clone)]
 pub struct $uds_config {
 }
 

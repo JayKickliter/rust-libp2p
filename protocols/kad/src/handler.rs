@@ -463,7 +463,7 @@ where
             }
             KademliaHandlerIn::FindNodeReq { key, user_data } => {
                 let msg = KadRequestMsg::FindNode { key };
-                self.substreams.push(SubstreamState::OutPendingOpen(msg, Some(user_data.clone())));
+                self.substreams.push(SubstreamState::OutPendingOpen(msg, Some(user_data)));
             }
             KademliaHandlerIn::FindNodeRes {
                 closer_peers,
@@ -482,7 +482,7 @@ where
                     };
 
                     let msg = KadResponseMsg::FindNode {
-                        closer_peers: closer_peers.clone(),
+                        closer_peers,
                     };
                     self.substreams
                         .push(SubstreamState::InPendingSend(conn_id, substream, msg));
@@ -491,7 +491,7 @@ where
             KademliaHandlerIn::GetProvidersReq { key, user_data } => {
                 let msg = KadRequestMsg::GetProviders { key };
                 self.substreams
-                    .push(SubstreamState::OutPendingOpen(msg, Some(user_data.clone())));
+                    .push(SubstreamState::OutPendingOpen(msg, Some(user_data)));
             }
             KademliaHandlerIn::GetProvidersRes {
                 closer_peers,
@@ -514,8 +514,8 @@ where
                     };
 
                     let msg = KadResponseMsg::GetProviders {
-                        closer_peers: closer_peers.clone(),
-                        provider_peers: provider_peers.clone(),
+                        closer_peers,
+                        provider_peers,
                     };
                     self.substreams
                         .push(SubstreamState::InPendingSend(conn_id, substream, msg));
@@ -554,7 +554,7 @@ where
 
                     let msg = KadResponseMsg::GetValue {
                         record,
-                        closer_peers: closer_peers.clone(),
+                        closer_peers,
                     };
                     self.substreams
                         .push(SubstreamState::InPendingSend(conn_id, substream, msg));
@@ -608,6 +608,7 @@ where
         self.keep_alive
     }
 
+    #[allow(clippy::type_complexity)]
     fn poll(
         &mut self,
         cx: &mut Context<'_>,
@@ -674,6 +675,7 @@ impl Default for KademliaHandlerConfig {
 ///
 /// Returns the new state for that substream, an event to generate, and whether the substream
 /// should be polled again.
+#[allow(clippy::type_complexity)]
 fn advance_substream<TUserData>(
     state: SubstreamState<TUserData>,
     upgrade: KademliaProtocolConfig,

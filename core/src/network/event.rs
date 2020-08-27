@@ -286,6 +286,7 @@ where
     /// Address used to send back data to the remote.
     pub(super) send_back_addr: Multiaddr,
     /// Reference to the `peers` field of the `Network`.
+    #[allow(clippy::type_complexity)]
     pub(super) pool: &'a mut Pool<
         TInEvent,
         TOutEvent,

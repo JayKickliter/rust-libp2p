@@ -19,7 +19,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 use crate::PublicKey;
-use bs58;
 use thiserror::Error;
 use multihash::{self, Code, Multihash};
 use rand::Rng;

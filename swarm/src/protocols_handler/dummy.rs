@@ -83,6 +83,7 @@ impl ProtocolsHandler for DummyProtocolsHandler {
         self.keep_alive
     }
 
+    #[allow(clippy::type_complexity)]
     fn poll(
         &mut self,
         _: &mut Context<'_>,

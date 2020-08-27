@@ -51,6 +51,7 @@ where
 {
     type Output = FloodsubRpc;
     type Error = FloodsubDecodeError;
+    #[allow(clippy::type_complexity)]
     type Future = Pin<Box<dyn Future<Output = Result<Self::Output, Self::Error>> + Send>>;
 
     fn upgrade_inbound(self, mut socket: TSocket, _: Self::Info) -> Self::Future {
@@ -161,6 +162,7 @@ where
 {
     type Output = ();
     type Error = io::Error;
+    #[allow(clippy::type_complexity)]
     type Future = Pin<Box<dyn Future<Output = Result<Self::Output, Self::Error>> + Send>>;
 
     fn upgrade_outbound(self, mut socket: TSocket, _: Self::Info) -> Self::Future {

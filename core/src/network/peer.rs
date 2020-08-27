@@ -217,6 +217,7 @@ where
     /// `remaining` addresses are tried in order in subsequent connection
     /// attempts in the context of the same dialing attempt, if the connection
     /// attempt to the first address fails.
+    #[allow(clippy::type_complexity)]
     pub fn dial<I>(self, address: Multiaddr, remaining: I, handler: THandler)
         -> Result<
             (ConnectionId, DialingPeer<'a, TTrans, TInEvent, TOutEvent, THandler, TConnInfo, TPeerId>),
@@ -312,8 +313,8 @@ where
     }
 
     /// Obtains an established connection to the peer by ID.
-    pub fn connection<'b>(&'b mut self, id: ConnectionId)
-        -> Option<EstablishedConnection<'b, TInEvent, TConnInfo>>
+    pub fn connection(&mut self, id: ConnectionId)
+        -> Option<EstablishedConnection<TInEvent, TConnInfo>>
     {
         self.network.pool.get_established(id)
     }
@@ -343,8 +344,8 @@ where
     }
 
     /// Gets an iterator over all established connections to the peer.
-    pub fn connections<'b>(&'b mut self) ->
-        EstablishedConnectionIter<'b,
+    pub fn connections(&mut self) ->
+        EstablishedConnectionIter<
             impl Iterator<Item = ConnectionId>,
             TInEvent,
             TOutEvent,
@@ -358,8 +359,8 @@ where
     }
 
     /// Obtains some established connection to the peer.
-    pub fn some_connection<'b>(&'b mut self)
-        -> EstablishedConnection<'b, TInEvent, TConnInfo>
+    pub fn some_connection<>(&mut self)
+        -> EstablishedConnection<TInEvent, TConnInfo>
     {
         self.connections()
             .into_first()
@@ -449,8 +450,8 @@ where
 
     /// Obtains a dialing attempt to the peer by connection ID of
     /// the current connection attempt.
-    pub fn attempt<'b>(&'b mut self, id: ConnectionId)
-        -> Option<DialingAttempt<'b, TInEvent, TConnInfo, TPeerId>>
+    pub fn attempt(&mut self, id: ConnectionId)
+        -> Option<DialingAttempt<TInEvent, TConnInfo, TPeerId>>
     {
         if let hash_map::Entry::Occupied(attempts) = self.network.dialing.entry(self.peer_id.clone()) {
             if let Some(pos) = attempts.get().iter().position(|s| s.current.0 == id) {
@@ -469,8 +470,8 @@ where
     }
 
     /// Gets an iterator over all dialing (i.e. pending outgoing) connections to the peer.
-    pub fn attempts<'b>(&'b mut self)
-        -> DialingAttemptIter<'b,
+    pub fn attempts(&mut self)
+        -> DialingAttemptIter<
             TInEvent,
             TOutEvent,
             THandler,
@@ -485,8 +486,8 @@ where
     /// Obtains some dialing connection to the peer.
     ///
     /// At least one dialing connection is guaranteed to exist on a `DialingPeer`.
-    pub fn some_attempt<'b>(&'b mut self)
-        -> DialingAttempt<'b, TInEvent, TConnInfo, TPeerId>
+    pub fn some_attempt(&mut self)
+        -> DialingAttempt<TInEvent, TConnInfo, TPeerId>
     {
         self.attempts()
             .into_first()
@@ -694,7 +695,8 @@ where
     }
 
     /// Obtains the next dialing connection, if any.
-    pub fn next<'b>(&'b mut self) -> Option<DialingAttempt<'b, TInEvent, TConnInfo, TPeerId>> {
+    #[allow(clippy::should_implement_trait)]
+    pub fn next(&mut self) -> Option<DialingAttempt<TInEvent, TConnInfo, TPeerId>> {
         if self.pos == self.end {
             return None
         }
